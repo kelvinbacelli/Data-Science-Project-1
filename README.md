@@ -1,7 +1,12 @@
 ---
 author: "Your Names (both first and last names)"
-title: "Proj ml ect"
+<<<<<<< HEAD
+title: "HELp"
 date: "yyyy-=mm-dd"
+=======
+title: "Your descriptive title"
+date: "2025-10-08"
+>>>>>>> 51b81b8eb156dab8e519fa517ad0c63668f1e9fe
 output:
   pdf_document:
     number_sections: true
