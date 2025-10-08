@@ -1,5 +1,5 @@
 ---
-author: "Your Names (both first and last names)"
+author: "Matthew Arsenault and Kelvin Bacelli"
 title: "Your descriptive title"
 date: "yyyy-mm-dd"
 output:
