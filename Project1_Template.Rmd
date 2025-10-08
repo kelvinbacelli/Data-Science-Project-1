@@ -1,7 +1,7 @@
 ---
 author: "Matthew Arsenault and Kelvin Bacelli"
 title: "Your descriptive title"
-date: "yyyy-mm-dd"
+date: "2025-10-08"
 output:
   pdf_document:
     number_sections: true
