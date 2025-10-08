@@ -1,8 +1,7 @@
 ---
-author: "Matthew Arsenault"
-<<<<<<< HEAD
-title: "Project"
-date: "yyyy-=mm-dd"
+author: "Matthew Arsenault and Kelvin Bacelli"
+title: "Project 1"
+date: "2025-10-08"
 =======
 title: "Your descriptive title"
 date: "2025-10-08"
