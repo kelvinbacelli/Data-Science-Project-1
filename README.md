@@ -1,6 +1,6 @@
 ---
 author: "Your Names (both first and last names)"
-title: "Project"
+title: "Proj ml ect"
 date: "yyyy-=mm-dd"
 output:
   pdf_document:
