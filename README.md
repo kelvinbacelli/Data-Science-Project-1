@@ -1,7 +1,7 @@
 ---
-author: "Your Names (both first and last names)"
+author: "Matthew Arsenault"
 <<<<<<< HEAD
-title: "HELp"
+title: "Project"
 date: "yyyy-=mm-dd"
 =======
 title: "Your descriptive title"
