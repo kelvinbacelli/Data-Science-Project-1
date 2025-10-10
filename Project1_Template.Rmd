@@ -27,6 +27,13 @@ data.df$seller_type <- factor(data.df$seller_type)
 # Data Exploration
 
 
+```{r echo=FALSE}
+label = c("First Owner","Second Owner", "Third Owner","Fourth & Above Owner")
+count = c("2204","801","233","76")
+owner.tbl <- cbind(label,count)
+kable(owner.tbl, caption = "Owner Comparison")
+```
+
 # Modeling 
 
 
