@@ -17,7 +17,13 @@ Note: Brief intro and your main question go in this space. You may edit the head
 
 # Data Description and Processing
 
-
+```{r echo=FALSE, include=FALSE}
+data.df <- read.csv("dataset3.csv")
+data.df <- na.omit(data.df)
+data.df$transmission <- factor(data.df$transmission)
+data.df$owner <- factor(data.df$owner)
+data.df$seller_type <- factor(data.df$seller_type)
+```
 # Data Exploration
 
 
