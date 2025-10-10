@@ -26,6 +26,7 @@ data.df$seller_type <- factor(data.df$seller_type)
 ```
 # Data Exploration
 
+The dataset contains observations on used cars with varying numbers of previous owners. Since vehicle ownership history is likely to influence selling price, we compare the number of vehicles across ownership levels. The distribution shows that most cars are first-owner vehicles(~66%), with progressively fewer cars in each subsequent ownership category.
 
 ```{r echo=FALSE}
 label = c("First Owner","Second Owner", "Third Owner","Fourth & Above Owner")
@@ -33,6 +34,9 @@ count = c("2204","801","233","76")
 owner.tbl <- cbind(label,count)
 kable(owner.tbl, caption = "Owner Comparison")
 ```
+
+We also explored the distribution of our outcome variable, selling price, to understand the overall spread of car values in the dataset. The distribution is heavily right-skewed, indicating that while most vehicles sell for relatively low prices, a small number of cars have very high selling prices.
+
 ```{r echo=FALSE, out.width="60%", out.height="40%", fig.align = 'center', fig.cap="Selling Price (US dollars)."}
 hist(data.df$selling_price, freq = FALSE, main = "", xlab = "Value",ylab = "Density")
 
@@ -52,6 +56,9 @@ value <- c(mn,avg,md,std,mx)
 st.tbl <- cbind(statistics, value)
 kable(st.tbl, caption="Overall Selling Price Descriptive Stats")
 ```
+
+Due to the fact that the original selling price variable was highly right-skewed, we applied the natural logarithm to the graph in order to make the distribution more symmetric. This helps stabilize the variance and makes the data more suitable for statistical modeling techniques (which assume approximately normal residuals).
+
 ```{r echo=FALSE, out.width="60%", out.height="40%", fig.align = 'center', fig.cap="Selling Price (US dollars)."}
 
 hist(log(data.df$selling_price), freq = FALSE, main = "", xlab = "Value",ylab = "Density")
@@ -61,8 +68,7 @@ lines(density(log(data.df$selling_price)),col = "red",lwd=2)
 
 ```
 
-
-
+We created a boxplot of the log-transformed selling price across the four ownership categories to explore how the number of previous owners affects vehicle value. As shown in the plot, as the ownership level increases, the mean selling price decreases, indicating that vehicles with more previous owners tend to have lower market values.
 
 ```{r echo=FALSE, out.width="60%", out.height="40%", fig.align = 'center', fig.cap="Selling Price by Ownership Level."}
 data.df$owner <- trimws(data.df$owner)  # remove any stray spaces
@@ -113,6 +119,9 @@ tble.df<- data.frame(statistic, first, second, third, fourth)
 kable(tble.df, caption="Selling Price per Status Descriptive Stats")
 
 ```
+
+A one-way ANOVA was conducted to test whether mean log(selling_price) differed across ownership levels. The results were highly significant, meaning at least one group differed from the others. A Tukey post-hoc test revealed that all pairwise comparisons between ownership levels were statistically significant (p<0.001), further reinforcing the trend that car value decreases as the number of previous owners increases.
+
 ```{r echo=FALSE, include=FALSE}
 anova_result <- aov(log(selling_price)~owner,data = data.df)
 TukeyHSD(anova_result)
