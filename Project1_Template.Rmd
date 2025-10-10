@@ -33,6 +33,47 @@ count = c("2204","801","233","76")
 owner.tbl <- cbind(label,count)
 kable(owner.tbl, caption = "Owner Comparison")
 ```
+```{r echo=FALSE, out.width="60%", out.height="40%", fig.align = 'center', fig.cap="Selling Price (US dollars)."}
+hist(data.df$selling_price, freq = FALSE, main = "", xlab = "Value",ylab = "Density")
+
+lines(density(data.df$selling_price),col = "red",lwd=2)
+```
+
+
+```{r echo=FALSE}
+# table of descriptive stats for the overall life expectancy
+statistics <- c("Min", "Mean","Median","StdDev","Max")
+mn<-min(data.df$selling_price)
+mx<-max(data.df$selling_price)
+avg<-round(mean(data.df$selling_price), 2)
+md<-median(data.df$selling_price)
+std<-round(sd(data.df$selling_price), 2)
+value <- c(mn,avg,md,std,mx)
+st.tbl <- cbind(statistics, value)
+kable(st.tbl, caption="Overall Selling Price Descriptive Stats")
+```
+```{r echo=FALSE, out.width="60%", out.height="40%", fig.align = 'center', fig.cap="Selling Price (US dollars)."}
+
+hist(log(data.df$selling_price), freq = FALSE, main = "", xlab = "Value",ylab = "Density")
+
+lines(density(log(data.df$selling_price)),col = "red",lwd=2)
+
+
+```
+
+
+
+
+```{r echo=FALSE, out.width="60%", out.height="40%", fig.align = 'center', fig.cap="Selling Price by Ownership Level."}
+data.df$owner <- trimws(data.df$owner)  # remove any stray spaces
+
+data.df$owner <- factor(data.df$owner,levels = c("First Owner", "Second Owner", "Third Owner", "Fourth & Above Owner"))
+
+par(mar = c(8,4,4,2))
+boxplot(log(selling_price)~owner,data = data.df,main="",ylab = "Log(Selling Price)",las=2,cex.axis=0.8)
+
+```
+
 
 # Modeling 
 
