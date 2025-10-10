@@ -73,8 +73,50 @@ par(mar = c(8,4,4,2))
 boxplot(log(selling_price)~owner,data = data.df,main="",ylab = "Log(Selling Price)",las=2,cex.axis=0.8)
 
 ```
+```{r echo=FALSE}
+# table of descriptive stats for the overall life expectancy
+statistics <- c("Min", "Mean","Median","StdDev","Max")
+#developed
+data1<-first.df$selling_price
+mn1<-min(data1)
+mx1<-max(data1)
+avg1<-round(mean(data1), 2)
+md1<-median(data1)
+std1<-round(sd(data1), 2)
+first <- c(mn1,avg1,md1,std1,mx1)
+#developing
+data2<-second.df$selling_price
+mn2<-min(data2)
+mx2<-max(data2)
+avg2<-round(mean(data2), 2)
+md2<-median(data2)
+std2<-round(sd(data2), 2)
+second <- c(mn2,avg2,md2,std2,mx2)
 
+data3<-third.df$selling_price
+mn3<-min(data3)
+mx3<-max(data3)
+avg3<-round(mean(data3), 2)
+md3<-median(data3)
+std3<-round(sd(data3), 2)
+third <- c(mn3,avg3,md3,std3,mx3)
 
+data4<-fourth.df$selling_price
+mn4<-min(data4)
+mx4<-max(data4)
+avg4<-round(mean(data4), 2)
+md4<-median(data4)
+std4<-round(sd(data4), 2)
+fourth <- c(mn4,avg4,md4,std4,mx4)
+
+tble.df<- data.frame(statistic, first, second, third, fourth)
+kable(tble.df, caption="Selling Price per Status Descriptive Stats")
+
+```
+```{r echo=FALSE, include=FALSE}
+anova_result <- aov(log(selling_price)~owner,data = data.df)
+TukeyHSD(anova_result)
+```
 # Modeling 
 
 
