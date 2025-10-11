@@ -17,6 +17,25 @@ Note: Brief intro and your main question go in this space. You may edit the head
 
 # Data Description and Processing
 
+The dataset we used was compiled by the used auto industry and contains information related to the sale of pre-owned vehicles. The data provide insights into various attributes of used cars that may influence their selling price.
+
+This dataset contains several types of observations describing vehicle characteristics and ownership details for a range of car listings.
+
+Outcomes:\
+selling_price: Selling price of the vehicle (in U.S. dollars). \\
+Vehicle Attributes:\
+km_driven: Total distance the car has been driven (in kilometers).\
+mileage: Fuel efficiency of the vehicle (in miles per gallon).\
+engine: Engine capacity (in cubic centimeters).\
+max_power: Maximum power output of the vehicle (in brake horsepower).\
+seats: Number of seats available in the car. \
+transmission: Type of transmission, either manual or automatic.\
+Ownership:\
+seller_type: Indicates whether the seller is an individual or a dealer.\
+owner: Level of ownership - First Owner, Second Owner, Third Owner, or Fourth & Above Owner. \
+
+The dataset was examined for missing values. Of the original 3,425 rows, 111 contained one or more missing entries. These 111 rows were removed, leaving a total of 3,314 complete observations for analysis.
+
 ```{r echo=FALSE, include=FALSE}
 data.df <- read.csv("dataset3.csv")
 data.df <- na.omit(data.df)
