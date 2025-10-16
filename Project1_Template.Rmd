@@ -66,22 +66,22 @@ lines(density(data.df$selling_price),col = "red",lwd=2)
 
 ```{r echo=FALSE}
 # table of descriptive stats for the overall life expectancy
-statistics <- c("Min", "Mean","Median","StdDev","Max")
+Statistics <- c("Min", "Mean","Median","StdDev","Max")
 mn<-min(data.df$selling_price)
 mx<-max(data.df$selling_price)
 avg<-round(mean(data.df$selling_price), 2)
 md<-median(data.df$selling_price)
 std<-round(sd(data.df$selling_price), 2)
-value <- c(mn,avg,md,std,mx)
-st.tbl <- cbind(statistics, value)
+Value <- c(mn,avg,md,std,mx)
+st.tbl <- cbind(Statistics, Value)
 kable(st.tbl, caption="Overall Selling Price Descriptive Stats")
 ```
 
-Due to the fact that the original selling price variable was highly right-skewed, we applied the natural logarithm to the graph in order to make the distribution more symmetric. This helps stabilize the variance and makes the data more suitable for statistical modeling techniques (which assume approximately normal residuals).
+Due to the fact that the original selling price variable was highly right-skewed, we applied the natural logarithm to the graph in order to make the distribution more symmetric. This helps stabilize the variance and makes the data more suitable for statistical modeling techniques (which assume approximately normal residuals). Because the natural log scale is exponential, each one-unit increase in log(selling price) corresponds to roughly a 2.7x increase in the actual selling price, meaning values from 10 to 11 represent about a 2.7 times increase, and from 11 to 12 another 2.7 times increase.
 
 ```{r echo=FALSE, out.width="60%", out.height="40%", fig.align = 'center', fig.cap="Selling Price (US dollars)."}
 
-hist(log(data.df$selling_price), freq = FALSE, main = "", xlab = "Value",ylab = "Density")
+hist(log(data.df$selling_price), freq = FALSE, main = "", xlab = "Log(Selling Price)",ylab = "Density")
 
 lines(density(log(data.df$selling_price)),col = "red",lwd=2)
 
@@ -96,7 +96,7 @@ data.df$owner <- trimws(data.df$owner)  # remove any stray spaces
 data.df$owner <- factor(data.df$owner,levels = c("First Owner", "Second Owner", "Third Owner", "Fourth & Above Owner"))
 
 par(mar = c(8,4,4,2))
-boxplot(log(selling_price)~owner,data = data.df,main="",ylab = "Log(Selling Price)",las=2,cex.axis=0.8)
+boxplot(log(selling_price)~owner,data = data.df,main="",ylab = "Log(Selling Price)", xlab = "Level of Ownership", las=1,cex.axis=0.8)
 
 ```
 ```{r echo=FALSE}
