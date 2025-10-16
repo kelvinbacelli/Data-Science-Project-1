@@ -8,7 +8,8 @@ output:
 ---
 ```{r echo=FALSE, include=FALSE, message=FALSE}
 # all library load statements here
-
+library(caret)
+library(knitr)
 r.version <- "4.3.2"
 seed.val <- 123456
 ```
@@ -147,6 +148,7 @@ TukeyHSD(anova_result)
 ```
 # Modeling 
 
+The variable selling_price represents the outcome of interest - the market value (US Dollars) of a used vehicle. Predictor variables such as year and km_driven reflect the vehicle's age and usage, while fuel, seller_type, and transmission describe its technical and commercial characteristics. The variable owner captures ownership history, which may indicate how well the car was maintained. Together, these predictors represent both physical wear and market perception factors that could affect resale value. Exploring their relationship with selling price can reveal which characteristics most strongly determine how much a vehicle sells for.
 
 ## Hypothesis
 
