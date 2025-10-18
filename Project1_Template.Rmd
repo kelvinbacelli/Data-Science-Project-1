@@ -142,7 +142,7 @@ kable(tble.df, caption="Selling Price per Status Descriptive Stats")
 
 A one-way ANOVA was conducted to test whether mean log(selling_price) differed across ownership levels. The results were highly significant, meaning at least one group differed from the others. A Tukey post-hoc test revealed that all pairwise comparisons between ownership levels were statistically significant (p<0.001), further reinforcing the trend that car value decreases as the number of previous owners increases.
 
-```{r echo=FALSE, include=FALSE}
+```{r echo=FALSE, include=FALSE} 
 anova_result <- aov(log(selling_price)~owner,data = data.df)
 TukeyHSD(anova_result)
 ```
@@ -152,9 +152,35 @@ The variable selling_price represents the outcome of interest - the market value
 
 ## Hypothesis
 
+We believe that the selling price of used cars will be positively correlated with the lower amount of kilometers driven and fewer amount of previous owners. Additionally, we expect a positive correlation with the higher mileage efficiency, a greater number of seats, a higher maximum power, and a larger engine size.k dd
 
 ## Model 1:
 
+We fit a linear model selling_price as our outcome variable and the predictor variables km_driven, seller_type, transmission, owner, mileage, engine, max_power, and seats to mainly get a better idea of what values are more significant than others. The results are as followed:
+
+```{r echo=FALSE}
+fit.all <- lm(selling_price ~ km_driven+seller_type+transmission+owner+mileage+engine+max_power+seats, data = data.df)
+vals <- coef(summary(fit.all))
+colnames(vals)[4] <- "p value"
+vals <- round(vals, 4)
+kable(vals)
+```
+
+The adjusted R-squared value for this model was 0.6747, meaning that around 67.5% of the variation of selling price can be explained by the predictors included in the model. This suggests that this model has a reasonably good fit.
+
+The following is a residual histogram and a Q-Q plot to show how closely your residuals follow a normal distribution. The histogram displays a strong peak at the center with evident skewness and a few big outliers. The same is also reflected in the Q-Q plot, indicating that the model is not perfectly normal.
+
+```{r echo=FALSE, out.width="60%", out.height="40%", fig.align = 'center', fig.cap="Distribution of Residuals: Model 1."}
+par(mfrow=c(1,2))
+hist(fit.all$residuals, freq = FALSE, main = "", xlab = "Residuals", xlim = range(fit.all$residuals), ylim = c(0, max(density(fit.all$residuals)$y) * 1.1))
+lines(density(fit.all$residuals), lwd = 2)
+
+
+qqnorm(y=fit.all$residuals, main = "")
+qqline(y=fit.all$residuals, datax = FALSE)
+```
+
+After examining our data, we found that cars with higher fuel efficiency, greater engine power, and more seats tended to sell for higher prices, while cars with more kilometers driven, manual transmissions, individual sellers, and multiple previous owners were associated with lower prices. Notably, second and third-owner vehicles were cheaper than first-owner cars, whereas having four or more previous owners did not significantly affect price (p = 0.4383). Similarly, although the number of seats generally increased in value, its effect was less pronounced in some cases. 
 
 ## Model 2: 
 
