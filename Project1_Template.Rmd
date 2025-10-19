@@ -182,8 +182,35 @@ qqline(y=fit.all$residuals, datax = FALSE)
 
 After examining our data, we found that cars with higher fuel efficiency, greater engine power, and more seats tended to sell for higher prices, while cars with more kilometers driven, manual transmissions, individual sellers, and multiple previous owners were associated with lower prices. Notably, second and third-owner vehicles were cheaper than first-owner cars, whereas having four or more previous owners did not significantly affect price (p = 0.4383). Similarly, although the number of seats generally increased in value, its effect was less pronounced in some cases. 
 
-## Model 2: 
+## Model 2:
 
+The data contains observations from a variety of cars with different specifications and ownership histories. There may be significant differences in how mileage, engine size, power, and other characteristics impact the selling price depending on the type of seller, transmission, and ownership status.
+
+We fit a second linear model that included all of the above predictors with log(selling_price) as the outcome variable and log(km_driven) as one of the predictors.
+
+```{r echo=FALSE}
+fit.log <- lm(log(selling_price) ~ log(km_driven)+seller_type+transmission+owner+mileage+engine+max_power+seats, data = data.df)
+log.vals <- coef(summary(fit.log))
+colnames(log.vals)[4] <- "p value"
+log.vals <- round(log.vals, 4)
+kable(log.vals)
+```
+
+The adjusted R-squared value for this model was 0.7501, meaning that around 75% of the variation of selling price can be explained by the predictors included in the model. This surpasses the previous model and is likely due to the fact that by taking the logarithm of data with a large range of values, we reduce the skewness of the data and stabilize the variance.
+
+The following is a residual histogram and a Q-Q plot to show how closely our residuals follow a normal distribution. The histogram displays a strong peak slightly right of the center with evident skewness and a few big outliers (although the outliers aren't as apparent as previously). The same is also reflected in the Q-Q plot, indicating that the model is not perfectly normal but more normal than the previous model.
+
+```{r echo=FALSE, out.width="60%", out.height="40%", fig.align = 'center', fig.cap="Distribution of Residuals: Model 1."}
+par(mfrow=c(1,2))
+hist(fit.log$residuals, freq = FALSE, main = "", xlab = "Residuals", xlim = range(fit.log$residuals), ylim = c(0, max(density(fit.log$residuals)$y) * 1.1))
+lines(density(fit.log$residuals), lwd = 2)
+
+
+qqnorm(y=fit.log$residuals, main = "")
+qqline(y=fit.log$residuals, datax = FALSE)
+```
+
+Overall, model 2 affirms the conclusions reached from model 1, that being, cars with higher fuel efficiency, greater engine power, and more seats tended to sell for higher prices, while cars with more kilometers driven, manual transmissions, individual sellers, and multiple previous owners were associated with lower prices. However, model 2 has a higher R-squared value indicating that it fits the data more closely, allowing it to capture underlying patterns more effectively and therefore making it more accurate and reliable.
 
 # Predicting with Models 1 and 2
 
