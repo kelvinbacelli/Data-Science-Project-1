@@ -214,6 +214,39 @@ Overall, model 2 affirms the conclusions reached from model 1, that being, cars 
 
 # Predicting with Models 1 and 2
 
+Now that we have two distinct models, we can work with both of them to see which one is a better predictor of selling price given data. We can use a 10-fold cross validation to do this, seperating 80% of the data to use for training, and the other 20% for testing on each fold.
+
+```{r echo=FALSE}
+train.control <- trainControl(method = "cv", number = 10, p = 0.80) 
+RNGversion(r.version)
+set.seed(seed.val)
+
+all.train <- train(selling_price ~ km_driven+seller_type+transmission+owner+mileage+engine+max_power+seats, data = data.df, method = "lm", trControl = train.control)
+log.train <- train(log(selling_price) ~ log(km_driven)+seller_type+transmission+owner+mileage+engine+max_power+seats, data = data.df, method = "lm", trControl = train.control)
+```
+
+
+```{r echo=FALSE, out.width="60%", out.height="40%", fig.align = 'center', fig.cap="RMSE Over 10 Folds."}
+num.folds <- 10
+rmse.all <- all.train$resample$RMSE
+rmse.log <- log.train$resample$RMSE
+plot(rmse.all, xlab = "Fold", xaxp = c(1, num.folds, num.folds-1), ylab = "RMSE", ylim=c(min(rmse.log), max(rmse.all)), col = "blue")
+lines(rmse.all, col = "blue")
+points(rmse.log, col="red")
+lines(rmse.log, col = "red",lty = 2)
+legend("bottomright", legend=c("Model 1", "Model 2"), col=c("blue", "red"), lty=1:2, cex=0.5)
+```
+
+We can now calculate the average root mean sauared error (RMSE) for both of our models' predictions of the 10 folds. The results are below.
+
+```{r echo=FALSE}
+label <- c("Model 1", "Model 2")
+avg.rmse.all<-round(mean(rmse.all),2)
+avg.rmse.log<-round(mean(rmse.log),2)
+rmse <- c(avg.rmse.all, avg.rmse.log)
+imb.tbl <- cbind(label, rmse)
+kable(imb.tbl, caption="Mean RMSE for Models 1 and 2.")
+```
 
 # Summary and Conclusions
 
