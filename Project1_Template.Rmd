@@ -186,31 +186,31 @@ After examining our data, we found that cars with higher fuel efficiency, greate
 
 The data contains observations from a variety of cars with different specifications and ownership histories. There may be significant differences in how mileage, engine size, power, and other characteristics impact the selling price depending on the type of seller, transmission, and ownership status.
 
-We fit a second linear model that included all of the above predictors with log(selling_price) as the outcome variable and log(km_driven) as one of the predictors.
+We fit a second linear model that included all of the above predictors with the exception of seats because it had the highest p-value (least significant).
 
 ```{r echo=FALSE}
-fit.log <- lm(log(selling_price) ~ log(km_driven)+seller_type+transmission+owner+mileage+engine+max_power+seats, data = data.df)
-log.vals <- coef(summary(fit.log))
-colnames(log.vals)[4] <- "p value"
-log.vals <- round(log.vals, 4)
-kable(log.vals)
+fit.seven <- lm(selling_price ~ km_driven+seller_type+transmission+owner+mileage+engine+max_power, data = data.df)
+seven.vals <- coef(summary(fit.seven))
+colnames(seven.vals)[4] <- "p value"
+seven.vals <- round(seven.vals, 4)
+kable(seven.vals)
 ```
 
-The adjusted R-squared value for this model was 0.7501, meaning that around 75% of the variation of selling price can be explained by the predictors included in the model. This surpasses the previous model and is likely due to the fact that by taking the logarithm of data with a large range of values, we reduce the skewness of the data and stabilize the variance.
+The adjusted R-squared value for this model was 0.6742, meaning that around 67.42% of the variation of selling price can be explained by the predictors included in the model. This is slightly lower than the previous model and is likely caused by the fact that even though we removed the least significant predictor, seats still had a p-value of ~0.02 which is considered highly significant (since it's less than 0.05).
 
-The following is a residual histogram and a Q-Q plot to show how closely our residuals follow a normal distribution. The histogram displays a strong peak slightly right of the center with evident skewness and a few big outliers (although the outliers aren't as apparent as previously). The same is also reflected in the Q-Q plot, indicating that the model is not perfectly normal but more normal than the previous model.
+The following is a residual histogram and a Q-Q plot to show how closely our residuals follow a normal distribution. The histogram displays a strong peak about the center with evident skewness and a few big outliers. The same is also reflected in the Q-Q plot, although this this model follows the line a bit more loosely, making it slightly less normal than model 1.
 
 ```{r echo=FALSE, out.width="60%", out.height="40%", fig.align = 'center', fig.cap="Distribution of Residuals: Model 1."}
 par(mfrow=c(1,2))
-hist(fit.log$residuals, freq = FALSE, main = "", xlab = "Residuals", xlim = range(fit.log$residuals), ylim = c(0, max(density(fit.log$residuals)$y) * 1.1))
-lines(density(fit.log$residuals), lwd = 2)
+hist(fit.seven$residuals, freq = FALSE, main = "", xlab = "Residuals", xlim = range(fit.seven$residuals), ylim = c(0, max(density(fit.seven$residuals)$y) * 1.1))
+lines(density(fit.seven$residuals), lwd = 2)
 
 
-qqnorm(y=fit.log$residuals, main = "")
-qqline(y=fit.log$residuals, datax = FALSE)
+qqnorm(y=fit.seven$residuals, main = "")
+qqline(y=fit.seven$residuals, datax = FALSE)
 ```
 
-Overall, model 2 affirms the conclusions reached from model 1, that being, cars with higher fuel efficiency, greater engine power, and more seats tended to sell for higher prices, while cars with more kilometers driven, manual transmissions, individual sellers, and multiple previous owners were associated with lower prices. However, model 2 has a higher R-squared value indicating that it fits the data more closely, allowing it to capture underlying patterns more effectively and therefore making it more accurate and reliable.
+Overall, model 2 affirms the conclusions reached from model 1, that being, cars with higher fuel efficiency, greater engine power, and more seats tended to sell for higher prices, while cars with more kilometers driven, manual transmissions, individual sellers, and multiple previous owners were associated with lower prices.
 
 # Predicting with Models 1 and 2
 
