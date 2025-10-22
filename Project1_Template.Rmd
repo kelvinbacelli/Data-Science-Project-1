@@ -84,8 +84,6 @@ Due to the fact that the original selling price variable was highly right-skewed
 hist(log(data.df$selling_price), freq = FALSE, main = "", xlab = "Log(Selling Price)",ylab = "Density")
 
 lines(density(log(data.df$selling_price)),col = "red",lwd=2)
-
-
 ```
 
 We created a boxplot of the log-transformed selling price across the four ownership categories to explore how the number of previous owners affects vehicle value. As shown in the plot, as the ownership level increases, the mean selling price decreases, indicating that vehicles with more previous owners tend to have lower market values.
@@ -99,6 +97,8 @@ par(mar = c(8,4,4,2))
 boxplot(log(selling_price)~owner,data = data.df,main="",ylab = "Log(Selling Price)", xlab = "Level of Ownership", las=1,cex.axis=0.8)
 
 ```
+
+
 ```{r echo=FALSE}
 # table of descriptive stats for the overall life expectancy
 statistics <- c("Min", "Mean","Median","StdDev","Max")
@@ -182,35 +182,57 @@ qqline(y=fit.all$residuals, datax = FALSE)
 
 After examining our data, we found that cars with higher fuel efficiency, greater engine power, and more seats tended to sell for higher prices, while cars with more kilometers driven, manual transmissions, individual sellers, and multiple previous owners were associated with lower prices. Notably, second and third-owner vehicles were cheaper than first-owner cars, whereas having four or more previous owners did not significantly affect price (p = 0.4383). Similarly, although the number of seats generally increased in value, its effect was less pronounced in some cases. 
 
-## Model 2:
-
-The data contains observations from a variety of cars with different specifications and ownership histories. There may be significant differences in how mileage, engine size, power, and other characteristics impact the selling price depending on the type of seller, transmission, and ownership status.
-
-We fit a second linear model that included all of the above predictors with the exception of seats because it had the highest p-value (least significant).
+As we found earlier, applying the log() function onto our dependent variable selling_price because of its skew helped the histograms distribution. We tried applying this same function to our linear regression model to the dependent variable selling_price, and a dependent variable that also has a skew, km_driven. The results are shown below.
 
 ```{r echo=FALSE}
-fit.seven <- lm(selling_price ~ km_driven+seller_type+transmission+owner+mileage+engine+max_power, data = data.df)
-seven.vals <- coef(summary(fit.seven))
-colnames(seven.vals)[4] <- "p value"
-seven.vals <- round(seven.vals, 4)
-kable(seven.vals)
+fit.log <- lm(log(selling_price) ~ log(km_driven) +seller_type+transmission+owner+mileage+engine+max_power+seats, data = data.df)
+vals <- coef(summary(fit.log))
+colnames(vals)[4] <- "p value"
+vals <- round(vals, 4)
+kable(vals)
 ```
 
-The adjusted R-squared value for this model was 0.6742, meaning that around 67.42% of the variation of selling price can be explained by the predictors included in the model. This is slightly lower than the previous model and is likely caused by the fact that even though we removed the least significant predictor, seats still had a p-value of ~0.02 which is considered highly significant (since it's less than 0.05).
+While this table just shows the same numbers in a different format, the adjusted R-squared for this model came out to be .7501, again meaning that around 75% of the variation of selling price can be explained by the predictors in the model. The previous model that has the same predictors without the log function is shown to only predict around 67.5% of the data, so getting rid of the skew helps the model more accurately explain the variation. 
 
-The following is a residual histogram and a Q-Q plot to show how closely our residuals follow a normal distribution. The histogram displays a strong peak about the center with evident skewness and a few big outliers. The same is also reflected in the Q-Q plot, although this this model follows the line a bit more loosely, making it slightly less normal than model 1.
+Below is another residual histogram and Q-Q plot for the new model. Compared to the previous model, the histogram now follows a distribution that is much closer to normal, and the Q-Q plot shows noticeably reduced right-skewness. This improvement makes sense with our expectations, as applying a logarithmic transformation helps correct right-skewed data and stabilize variance.
 
 ```{r echo=FALSE, out.width="60%", out.height="40%", fig.align = 'center', fig.cap="Distribution of Residuals: Model 1."}
 par(mfrow=c(1,2))
-hist(fit.seven$residuals, freq = FALSE, main = "", xlab = "Residuals", xlim = range(fit.seven$residuals), ylim = c(0, max(density(fit.seven$residuals)$y) * 1.1))
-lines(density(fit.seven$residuals), lwd = 2)
+hist(fit.log$residuals, freq = FALSE, main = "", xlab = "Residuals", xlim = range(fit.log$residuals), ylim = c(0, max(density(fit.log$residuals)$y) * 1.1))
+lines(density(fit.log$residuals), lwd = 2)
 
-
-qqnorm(y=fit.seven$residuals, main = "")
-qqline(y=fit.seven$residuals, datax = FALSE)
+qqnorm(y=fit.log$residuals, main = "")
+qqline(y=fit.log$residuals, datax = FALSE)
 ```
 
-Overall, model 2 affirms the conclusions reached from model 1, that being, cars with higher fuel efficiency, greater engine power, and more seats tended to sell for higher prices, while cars with more kilometers driven, manual transmissions, individual sellers, and multiple previous owners were associated with lower prices.
+
+## Model 2:
+
+When a dataset contains many variables, it is common for some of them to be related to each other. In our case, with car data, several variables appear to have semi-linear relationships. For instance, as the number of previous owners increases, it makes sense that the car would have a higher number of kilometers driven. To explore this relationship further, we introduced an interaction term between owner and km_driven (owner * log(km_driven)), which causes the data to be easier to interpret, and allows the effect of kilometers driven on the selling price to vary depending on ownership status. We then incorporated this interaction into a new linear model to examine whether accounting for this relationship improves model performance.
+
+```{r echo=FALSE}
+fit.new <- lm(log(selling_price) ~ log(km_driven) * owner + seller_type + transmission + engine + max_power + mileage + seats, data = data.df)
+new.vals <- coef(summary(fit.new))
+colnames(new.vals)[4] <- "p value"
+new.vals <- round(new.vals, 4)
+kable(new.vals)
+```
+
+The adjusted R-squared value for this model was 0.751 which not by much, but does make an improvement to the amount of variation explained compared to the previous model's adjusted R-squared of 0.7501. In this new model, we also see that the negative and significant coefficients for log(km_driven):ownerSecond Owner and log(km_driven):ownerFourth & Above Owner suggest that for cars with more previous owners, each additional kilometer driven is associated with a larger decrease in selling price compared to first-owner cars. This makes sense as buyers likely perceive higher mileage as a greater depreciation factor for cars that dont have the title of being owned only once before.
+
+The following is a residual histogram and a Q-Q plot to show how closely our residuals follow a normal distribution for our new model. With no variables being changed besides owners and km_driven, the histogram and Q-Q plot show nearly the same as the previous model.
+
+```{r echo=FALSE, out.width="60%", out.height="40%", fig.align = 'center', fig.cap="Distribution of Residuals: Model 1."}
+par(mfrow=c(1,2))
+hist(fit.new$residuals, freq = FALSE, main = "", xlab = "Residuals", xlim = range(fit.new$residuals), ylim = c(0, max(density(fit.new$residuals)$y) * 1.1))
+lines(density(fit.new$residuals), lwd = 2)
+
+
+qqnorm(y=fit.new$residuals, main = "")
+qqline(y=fit.new$residuals, datax = FALSE)
+```
+
+Overall, Model 2 represents a slight improvement over Model 1, not only by explaining a bit more of the variability in selling price, but also by making the relationships in the data more interpretable.
 
 # Predicting with Models 1 and 2
 
