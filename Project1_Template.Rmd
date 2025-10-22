@@ -218,7 +218,7 @@ new.vals <- round(new.vals, 4)
 kable(new.vals)
 ```
 
-The adjusted R-squared value for this model was 0.751 which not by much, but does make an improvement to the amount of variation explained compared to the previous model's adjusted R-squared of 0.7501. In this new model, we also see that the negative and significant coefficients for log(km_driven):ownerSecond Owner and log(km_driven):ownerFourth & Above Owner suggest that for cars with more previous owners, each additional kilometer driven is associated with a larger decrease in selling price compared to first-owner cars. This makes sense as buyers likely perceive higher mileage as a greater depreciation factor for cars that dont have the title of being owned only once before.
+The adjusted R-squared value for this model was 0.751 which not by much, but does make an improvement to the amount of variation explained compared to the previous model's adjusted R-squared of 0.7501. In this new model, we also see that the negative and significant coefficients for log(km_driven):ownerSecond Owner and log(km_driven):ownerFourth & Above Owner suggest that for cars with more previous owners, each additional kilometer driven is associated with a larger decrease in selling price compared to first-owner cars. This makes sense as buyers likely perceive higher mileage as a greater depreciation factor for cars that don't have the title of being owned only once before.
 
 The following is a residual histogram and a Q-Q plot to show how closely our residuals follow a normal distribution for our new model. With no variables being changed besides owners and km_driven, the histogram and Q-Q plot show nearly the same as the previous model.
 
@@ -259,7 +259,7 @@ lines(rmse.new, col = "red",lty = 2)
 legend("bottomright", legend=c("Model 1", "Model 2"), col=c("blue", "red"), lty=1:2, cex=0.5)
 ```
 
-We can now calculate the average root mean sauared error (RMSE) for both of our models' predictions of the 10 folds. The results are below.
+We can now calculate the average root mean squared error (RMSE) for both of our models' predictions of the 10 folds. The results are below.
 
 ```{r echo=FALSE}
 label <- c("Model 1", "Model 2")
@@ -271,4 +271,12 @@ kable(imb.tbl, caption="Mean RMSE for Models 1 and 2.")
 ```
 
 # Summary and Conclusions
+
+Both model 1 and model 2 fit the data well, and shows a positive, significant correlation with selling price for the variables that measured mileage, max power, and seats while showing a significant, negative correlation with the variables measuring kilometers driven, seller type (individual), transmission (manual), owner, and engine.
+
+Model 2 demonstrated a slightly better fit, making it the stronger predictor of selling price. The inclusion of the interaction term allowed model 2 to capture a bit more variation in the data, marginally improving its predictive accuracy.
+
+It is important to note that this dataset represents only a subset of the used car market, and that many other factors- such as brand reputation, regional demand, economic conditions, and maintenance history- can also affect selling price.
+
+With these considerations in mind, we can conclude that, based on our models, higher mileage efficiency, greater engine power, and more seating capacity are associated with higher selling prices, while cars with more kilometers driven, manual transmissions, or individual sellers tend to have lower selling prices in this dataset.
 
