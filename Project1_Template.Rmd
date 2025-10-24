@@ -44,6 +44,8 @@ data.df$transmission <- factor(data.df$transmission)
 data.df$owner <- factor(data.df$owner)
 data.df$seller_type <- factor(data.df$seller_type)
 ```
+
+\newpage
 # Data Exploration
 
 The dataset contains observations on used cars with varying numbers of previous owners. Since vehicle ownership history is likely to influence selling price, we compare the number of vehicles across ownership levels. The distribution shows that most cars are first-owner vehicles(~66%), with progressively fewer cars in each subsequent ownership category.
@@ -76,7 +78,7 @@ Value <- c(mn,avg,md,std,mx)
 st.tbl <- cbind(Statistics, Value)
 kable(st.tbl, caption="Overall Selling Price Descriptive Stats")
 ```
-
+\newpage
 Due to the fact that the original selling price variable was highly right-skewed, we applied the natural logarithm to the graph in order to make the distribution more symmetric. This helps stabilize the variance and makes the data more suitable for statistical modeling techniques (which assume approximately normal residuals). Because the natural log scale is exponential, each one-unit increase in log(selling price) corresponds to roughly a 2.7x increase in the actual selling price, meaning values from 10 to 11 represent about a 2.7 times increase, and from 11 to 12 another 2.7 times increase.
 
 ```{r echo=FALSE, out.width="60%", out.height="40%", fig.align = 'center', fig.cap="Selling Price (US dollars)."}
@@ -154,6 +156,7 @@ A one-way ANOVA was conducted to test whether mean log(selling_price) differed a
 anova_result <- aov(log(selling_price)~owner,data = data.df)
 TukeyHSD(anova_result)
 ```
+\newpage
 # Modeling 
 
 The variable selling_price represents the outcome of interest - the market value (US Dollars) of a used vehicle. Predictor variables such as year and km_driven reflect the vehicle's age and usage, while fuel, seller_type, and transmission describe its technical and commercial characteristics. The variable owner captures ownership history, which may indicate how well the car was maintained. Together, these predictors represent both physical wear and market perception factors that could affect resale value. Exploring their relationship with selling price can reveal which characteristics most strongly determine how much a vehicle sells for.
@@ -161,7 +164,7 @@ The variable selling_price represents the outcome of interest - the market value
 ## Hypothesis
 
 We believe that the selling price of used cars will be positively correlated with the lower amount of kilometers driven and fewer amount of previous owners. Additionally, we expect a positive correlation with the higher mileage efficiency, a greater number of seats, a higher maximum power, and a larger engine size.k dd
-
+\newpage
 ## Model 1:
 
 We fit a linear model selling_price as our outcome variable and the predictor variables km_driven, seller_type, transmission, owner, mileage, engine, max_power, and seats to mainly get a better idea of what values are more significant than others. The results are as followed:
@@ -189,7 +192,7 @@ qqline(y=fit.all$residuals, datax = FALSE)
 ```
 
 After examining our data, we found that cars with higher fuel efficiency, greater engine power, and more seats tended to sell for higher prices, while cars with more kilometers driven, manual transmissions, individual sellers, and multiple previous owners were associated with lower prices. Notably, second and third-owner vehicles were cheaper than first-owner cars, whereas having four or more previous owners did not significantly affect price (p = 0.4383). Similarly, although the number of seats generally increased in value, its effect was less pronounced in some cases. 
-
+\newpage
 As we found earlier, applying the log() function onto our dependent variable selling_price because of its skew helped the histograms distribution. We tried applying this same function to our linear regression model to the dependent variable selling_price, and a dependent variable that also has a skew, km_driven. The results are shown below.
 
 ```{r echo=FALSE}
@@ -225,7 +228,7 @@ colnames(new.vals)[4] <- "p value"
 new.vals <- round(new.vals, 4)
 kable(new.vals)
 ```
-
+\newpage
 The adjusted R-squared value for this model was 0.751 which not by much, but does make an improvement to the amount of variation explained compared to the previous model's adjusted R-squared of 0.7501. In this new model, we also see that the negative and significant coefficients for log(km_driven):ownerSecond Owner and log(km_driven):ownerFourth & Above Owner suggest that for cars with more previous owners, each additional kilometer driven is associated with a larger decrease in selling price compared to first-owner cars. This makes sense as buyers likely perceive higher mileage as a greater depreciation factor for cars that don't have the title of being owned only once before.
 
 The following is a residual histogram and a Q-Q plot to show how closely our residuals follow a normal distribution for our new model. With no variables being changed besides owners and km_driven, the histogram and Q-Q plot show nearly the same as the previous model.
@@ -241,7 +244,7 @@ qqline(y=fit.new$residuals, datax = FALSE)
 ```
 
 Overall, Model 2 represents a slight improvement over Model 1, not only by explaining a bit more of the variability in selling price, but also by making the relationships in the data more interpretable.
-
+\newpage
 # Predicting with Models 1 and 2
 
 Now that we have two distinct models, we can work with both of them to see which one is a better predictor of selling price given data. We can use a 10-fold cross validation to do this, seperating 80% of the data to use for training, and the other 20% for testing on each fold.
@@ -277,7 +280,7 @@ rmse <- c(avg.rmse.all, avg.rmse.new)
 imb.tbl <- cbind(label, rmse)
 kable(imb.tbl, caption="Mean RMSE for Models 1 and 2.")
 ```
-
+\newpage
 # Summary and Conclusions
 
 Both model 1 and model 2 fit the data well, and shows a positive, significant correlation with selling price for the variables that measured mileage, max power, and seats while showing a significant, negative correlation with the variables measuring kilometers driven, seller type (individual), transmission (manual), owner, and engine.
