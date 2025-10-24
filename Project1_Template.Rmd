@@ -100,7 +100,6 @@ boxplot(log(selling_price)~owner,data = data.df,main="",ylab = "Log(Selling Pric
 
 
 ```{r echo=FALSE, include=FALSE}
-# Split data by ownership level
 first.df  <- subset(data.df, owner == "First Owner")
 second.df <- subset(data.df, owner == "Second Owner")
 third.df  <- subset(data.df, owner == "Third Owner")
