@@ -45,10 +45,13 @@ data.df$owner <- factor(data.df$owner)
 data.df$seller_type <- factor(data.df$seller_type)
 ```
 
-\newpage
+
+
 # Data Exploration
 
 The dataset contains observations on used cars with varying numbers of previous owners. Since vehicle ownership history is likely to influence selling price, we compare the number of vehicles across ownership levels. The distribution shows that most cars are first-owner vehicles(~66%), with progressively fewer cars in each subsequent ownership category.
+
+\newpage
 
 ```{r echo=FALSE}
 label = c("First Owner","Second Owner", "Third Owner","Fourth & Above Owner")
@@ -157,6 +160,7 @@ anova_result <- aov(log(selling_price)~owner,data = data.df)
 TukeyHSD(anova_result)
 ```
 \newpage
+
 # Modeling 
 
 The variable selling_price represents the outcome of interest - the market value (US Dollars) of a used vehicle. Predictor variables such as year and km_driven reflect the vehicle's age and usage, while fuel, seller_type, and transmission describe its technical and commercial characteristics. The variable owner captures ownership history, which may indicate how well the car was maintained. Together, these predictors represent both physical wear and market perception factors that could affect resale value. Exploring their relationship with selling price can reveal which characteristics most strongly determine how much a vehicle sells for.
@@ -164,10 +168,13 @@ The variable selling_price represents the outcome of interest - the market value
 ## Hypothesis
 
 We believe that the selling price of used cars will be positively correlated with the lower amount of kilometers driven and fewer amount of previous owners. Additionally, we expect a positive correlation with the higher mileage efficiency, a greater number of seats, a higher maximum power, and a larger engine size.k dd
-\newpage
+
+
 ## Model 1:
 
 We fit a linear model selling_price as our outcome variable and the predictor variables km_driven, seller_type, transmission, owner, mileage, engine, max_power, and seats to mainly get a better idea of what values are more significant than others. The results are as followed:
+
+\newpage
 
 ```{r echo=FALSE}
 fit.all <- lm(selling_price ~ km_driven+seller_type+transmission+owner+mileage+engine+max_power+seats, data = data.df)
@@ -244,7 +251,9 @@ qqline(y=fit.new$residuals, datax = FALSE)
 ```
 
 Overall, Model 2 represents a slight improvement over Model 1, not only by explaining a bit more of the variability in selling price, but also by making the relationships in the data more interpretable.
+
 \newpage
+
 # Predicting with Models 1 and 2
 
 Now that we have two distinct models, we can work with both of them to see which one is a better predictor of selling price given data. We can use a 10-fold cross validation to do this, seperating 80% of the data to use for training, and the other 20% for testing on each fold.
@@ -280,7 +289,9 @@ rmse <- c(avg.rmse.all, avg.rmse.new)
 imb.tbl <- cbind(label, rmse)
 kable(imb.tbl, caption="Mean RMSE for Models 1 and 2.")
 ```
+
 \newpage
+
 # Summary and Conclusions
 
 Both model 1 and model 2 fit the data well, and shows a positive, significant correlation with selling price for the variables that measured mileage, max power, and seats while showing a significant, negative correlation with the variables measuring kilometers driven, seller type (individual), transmission (manual), owner, and engine.
