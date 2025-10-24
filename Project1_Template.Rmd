@@ -99,6 +99,15 @@ boxplot(log(selling_price)~owner,data = data.df,main="",ylab = "Log(Selling Pric
 ```
 
 
+```{r echo=FALSE, include=FALSE}
+# Split data by ownership level
+first.df  <- subset(data.df, owner == "First Owner")
+second.df <- subset(data.df, owner == "Second Owner")
+third.df  <- subset(data.df, owner == "Third Owner")
+fourth.df <- subset(data.df, owner == "Fourth & Above Owner")
+
+```
+
 ```{r echo=FALSE}
 # table of descriptive stats for the overall life expectancy
 statistics <- c("Min", "Mean","Median","StdDev","Max")
