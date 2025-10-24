@@ -135,7 +135,7 @@ md4<-median(data4)
 std4<-round(sd(data4), 2)
 fourth <- c(mn4,avg4,md4,std4,mx4)
 
-tble.df<- data.frame(statistic, first, second, third, fourth)
+tble.df<- data.frame(statistics, first, second, third, fourth)
 kable(tble.df, caption="Selling Price per Status Descriptive Stats")
 
 ```
